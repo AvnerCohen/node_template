@@ -1,0 +1,17 @@
+{
+  "port": 7001,  
+  "globals" : {
+    "whatever" : 12,
+    "text_key" : "value"
+  },
+  "logger" :{
+    "servers" :[{ "host": "127.0.0.1", "port": 12201 }],
+    "hostname" : "",
+    "facility" : "NODE_TEMPLATE"
+  },
+  "statsd" : {
+    "host" : "127.0.0.1",
+    "port" : "8125",
+    "prefix" : "NODE_TEMPLATE."
+  }
+}

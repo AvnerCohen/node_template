@@ -1,0 +1,28 @@
+{
+  "name": "template-service",
+  "version": "0.0.1",
+  "description": "Service to do something",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha",
+    "test-all": "mocha && mocha ./test/integration",
+    "start": "./node_modules/.bin/naught start  --worker-count 3 --ipc-file run/naught.ipc --log log/naught.log --stdout log/stdout.log --stderr log/stderr.log app.js",
+    "stop": "./node_modules/.bin/naught stop run/naught.ipc",
+    "status": "./node_modules/.bin/naught status run/naught.ipc",
+    "deploy": "./node_modules/.bin/naught deploy --timeout 15 run/naught.ipc "
+  },
+  "repository": "",
+  "private": true,
+  "dependencies": {
+    "express": "~3.4.0",
+    "graylog2": "~0.1.0",
+    "lodash": "~2.2.0",
+    "jade": "~0.35.0",
+    "mongodb": "~1.3.19",
+    "mocha": "~1.13.0",
+    "should": "~1.3.0",
+    "naught": "~0.7.0",
+    "supertest": "~0.8.0",
+    "statsd-client": "~0.0.15"
+  }
+}
