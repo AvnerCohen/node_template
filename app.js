@@ -26,7 +26,7 @@ app.configure(function(){
   app.use(sdc.helpers.getExpressMiddleware());
   app.use(error_handler.handle_error);
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express["static"](path.join(__dirname, 'public')));
 });
 
 app.configure('development', function(){
