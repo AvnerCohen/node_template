@@ -1,4 +1,4 @@
-# Template for a node service
+# Template for a Node.js service
 
 ## Libararies being used
 
@@ -42,7 +42,7 @@ NODE_ENV=development npm stop
 ***Deploy / Restart***
 
 ````sh
-NODE_ENV=production npm run-script deploy
+NODE_ENV=production npm run- deploy
 ````
 
 ##NPM Additional Commands Available
