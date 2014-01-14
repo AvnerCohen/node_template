@@ -6,10 +6,10 @@
   "scripts": {
     "test": "mocha",
     "test-all": "mocha && mocha ./test/integration",
-    "start": "./node_modules/.bin/naught start  --worker-count 3 --ipc-file run/naught.ipc --log log/naught.log --stdout log/stdout.log --stderr log/stderr.log app.js",
-    "stop": "./node_modules/.bin/naught stop run/naught.ipc",
-    "status": "./node_modules/.bin/naught status run/naught.ipc",
-    "deploy": "./node_modules/.bin/naught deploy --timeout 15 run/naught.ipc "
+    "start": "naught start  --worker-count 3 --ipc-file run/naught.ipc --log log/naught.log --stdout log/stdout.log --stderr log/stderr.log app.js",
+    "stop": "naught stop run/naught.ipc",
+    "status": "naught status run/naught.ipc",
+    "deploy": "naught deploy --timeout 15 run/naught.ipc "
   },
   "repository": "",
   "dependencies": {
