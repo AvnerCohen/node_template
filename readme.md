@@ -42,7 +42,7 @@ NODE_ENV=development npm stop
 ***Deploy / Restart***
 
 ````sh
-NODE_ENV=production npm run- deploy
+NODE_ENV=production npm run-script deploy
 ````
 
 ##NPM Additional Commands Available
@@ -53,7 +53,7 @@ NODE_ENV=production npm run- deploy
 npm test
 ````
 
-***Run Integration Tests
+***Run Integration Tests***
 
 ````sh
 mocha ./test/integration
