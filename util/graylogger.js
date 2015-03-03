@@ -1,31 +1,27 @@
-var graylog2 = require("graylog2");
-var util = require('util');
-var os = require("os");
-var cfg = require("../config");
+var winston = require('winston');
+var WinstonGraylog2 = require('winston-graylog2');
+var cfg = require('../config');
 
-var logger = new graylog2.graylog(get_config());
+var env = (process.env.NODE_ENV || 'DEVELOPMENT').toLowerCase();
 
-exports.error_message = function(request, class_name, message, err){
-  remote_ip_address = request.headers['X-Forwarded-For'];
-  if (remote_ip_address === undefined) {
-    remote_ip_address = request.connection.remoteAddress;
+var grayLogOptions = {
+  name: 'GraylogDeNode',
+  level: 'error',
+  silent: false,
+  handleExceptions: false,
+  graylog: {
+    servers: [{host: cfg.logger.servers[0]['host'], port: cfg.logger.servers[0]['port']}],
+    hostname: 'myServer',
+    facility: cfg.logger.facility,
+    bufferSize: 1400
   }
-  short_message = util.format('Class: %s  Message: %s', class_name, message);
-  fields  = {
-    Remote_ip_address : remote_ip_address,
-    URI : request.url,
-    User_agent : request.headers['user-agent'],
-    Content_type : request.headers['Content-Type'],
-    Referer : request.headers['Referer']
-  };
-  env = process.env.NODE_ENV;
-  logger.error(short_message, err.stack, fields);
 };
 
+var logger = new(winston.Logger)({
+  transports: [
+              new (winston.transports.Console)({timestamp: true, level: cfg.logger.log_level }),
+              new(WinstonGraylog2)(grayLogOptions)
+              ]
+      });
 
-function get_config () {
-  config = cfg.logger;
-  config.hostname = os.hostname();
-
-  return config;
-}
+module.exports = logger;

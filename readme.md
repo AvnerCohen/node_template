@@ -5,7 +5,6 @@
 * naught
 * express
 * graylog2
-* jade
 * mongodb
 * statsd-client
 * naught

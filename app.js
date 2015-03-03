@@ -1,52 +1,54 @@
 var fs = require('fs'),
     path = require('path'),
-    numCPUs = require('os').cpus().length,
-    hostname = require('os').hostname();
-var cfg = require('./config');
-var error_handler = require('./util/error_handler');
-var express = require('express');
-var routes = require('./routes');
-var app = express();
+    hostname = require('os').hostname(),
+    cfg = require('./config'),
+    errorHandler = require('./util/error_handler'),
+    logger = require('./util/graylogger'),
+    routes = require('./routes'),
+    express = require('express'),
+    expressRouter = express.Router(),
+    bodyParser = require('body-parser'),
+    errorHandler = require('errorhandler'),
+    methodOverride = require('method-override');
+
 var SDC = require('statsd-client');
-    cfg.statsd['prefix'] += hostname;
+
+var app = express();
 var sdc = new SDC(cfg.statsd);
+cfg.statsd['prefix'] += hostname;
+
 
 var env = (process.env.NODE_ENV || 'DEVELOPMENT').toLowerCase();
-console.log("Initiating process with pid: " + process.pid);
+logger.info("Initiating process with pid: " + process.pid);
 
 var port = process.env.PORT || cfg.port || 7001;
 
-app.configure(function(){
-  app.set('port', port);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.favicon());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(sdc.helpers.getExpressMiddleware());
-  app.use(error_handler.handle_error);
-  app.use(app.router);
-  app.use(express["static"](path.join(__dirname, 'public')));
-});
+app.set('port', port);
+app.use(methodOverride());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(sdc.helpers.getExpressMiddleware());
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+if ('development' == app.get('env')) {
+  app.use(errorHandler());
+}
 
-app.get('/api/v1/ping', routes.ping);
+expressRouter.get('/ping', routes.ping);
+expressRouter.post('/echo', routes.echo);
 
+app.use('/', expressRouter);
 
-app.listen(port, function(){
-  console.log("Listening ............... on ................... %d", port);
+app.listen(app.get('port'), function(){
+  logger.info("Listening ............... on ................... %d", app.get('port'));
   if (process.send) {
-    console.log("Send online notification for:  %s", process.pid);
+    logger.info("Send online notification for:  %s", process.pid);
     process.send('online');
   }
 });
 
 process.on('message', function(message) {
  if (message === 'shutdown') {
-    console.log("Got a shutdown message for %s", process.pid);
+    logger.info("Got a shutdown message for %s", process.pid);
    process.exit(0);
  }
 });
